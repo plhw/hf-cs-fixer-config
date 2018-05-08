@@ -1,12 +1,20 @@
 <?php
+
 /**
- * This file is part of the plhw/php-cs-fixer-config.
- * (c) 2016-2016 prooph software GmbH <contact@prooph.de>
- * (c) 2016-2016 Sascha-Oliver Prolic <saschaprolic@googlemail.com>.
+ * Project 'Healthy Feet' by Podolab Hoeksche Waard.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @see       https://plhw.nl/
+ *
+ * @copyright Copyright (c) 2016-2018 prooph software GmbH <contact@prooph.de>
+ * @copyright Copyright (c) 2016-2018 Sascha-Oliver Prolic <saschaprolic@googlemail.com>.
+ * @copyright Copyright (c) 2010-2018 bushbaby multimedia. (https://bushbaby.nl)
+ * @author    Bas Kamer <bas@bushbaby.nl>
+ * @license   MIT
  */
+
 declare(strict_types=1);
 
 namespace HF\CS;
@@ -107,22 +115,45 @@ class Config extends PhpCsFixerConfig
         'whitespace_after_comma_in_array'             => true,
     ];
 
-    /**
-     * @var array
-     */
-    private $config;
+//    /**
+//     * @var array
+//     */
+//    private $config;
 
     public function __construct(array $overrides = [])
     {
         parent::__construct('plhw-hf');
 
-        $this->config = array_merge($this->defaults, $overrides);
-
+        $this->setRules(array_merge($this->defaults, $overrides));
         $this->setRiskyAllowed(true);
+        $this->applyHeader();
     }
 
-    public function getRules(): array
+    private function applyHeader(): void
     {
-        return $this->config;
+        if (file_exists('.docheader')) {
+            $header = file_get_contents('.docheader');
+
+            $header = str_replace(['%year%'], [(new \DateTime('now'))->format('Y')], $header);
+
+            $rules = $this->getRules();
+
+            $headerCommentRule = $rules['header_comment'] ?? [];
+
+            if ($headerCommentRule) {
+                $headerCommentRule['header'] = $header;
+            } else {
+                $headerCommentRule = [
+                    'commentType' => 'PHPDoc',
+                    'header'      => $header,
+                    'location'    => 'after_open',
+                    'separate'    => 'both',
+                ];
+            }
+
+            $rules['header_comment'] = $headerCommentRule;
+
+            $this->setRules($rules);
+        }
     }
 }
