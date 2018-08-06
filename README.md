@@ -9,7 +9,19 @@ It's based on the ideas of [`refinery29/php-cs-fixer-config`](https://github.com
 Run
 
 ```
-$ composer require --dev plhw/php-cs-fixer-config
+$ composer require --dev plhw/php-cs-fixer-config:^2.8.1
+```
+
+Add to composer.json;
+
+```json
+"scripts": {
+  "check": [
+    "@cs",
+  ],
+  "cs": "php-cs-fixer fix -v --diff --dry-run",
+  "cs-fix": "php-cs-fixer fix -v --diff",
+}
 ```
   
 ## Usage
@@ -23,6 +35,7 @@ Create a configuration file `.php_cs` in the root of your project:
 
 $config = new HF\CS\Config();
 $config->getFinder()->in(__DIR__);
+$config->getFinder()->append(['.php_cs']);
 
 $cacheDir = getenv('TRAVIS') ? getenv('HOME') . '/.php-cs-fixer' : __DIR__;
 
@@ -54,7 +67,7 @@ Then run `php-cs-fixer` in the `script` section:
 
 ```yml
 script:
-  - vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run
+  - composer cs
 ```
 
 ### GitLab
@@ -63,7 +76,7 @@ Update your `.gitlab-ci` to cache the `php_cs.cache` file:
 
 ```
   script:
-    - vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run
+  - composer cs
 ```
 
 ## Fixing issues
@@ -73,7 +86,7 @@ Update your `.gitlab-ci` to cache the `php_cs.cache` file:
 If you need to fix issues locally, just run
 
 ```
-$ ./vendor/bin/php-cs-fixer fix -v
+$ . composer cs-fix
 ```
 
 ### Pre-commit hook
@@ -114,7 +127,7 @@ else
     echo ""
     echo "Please install php-cs-fixer, e.g.:"
     echo ""
-    echo "  composer require friendsofphp/php-cs-fixer:2.0.0"
+    echo "  composer require friendsofphp/php-cs-fixer:^2.8.1"
     echo ""
 fi
 

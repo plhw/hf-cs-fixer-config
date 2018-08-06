@@ -13,6 +13,8 @@
  * @copyright Copyright (c) 2010-2018 bushbaby multimedia. (https://bushbaby.nl)
  * @author    Bas Kamer <bas@bushbaby.nl>
  * @license   MIT
+ *
+ * @package   plhw/hf-cs-fixer-config
  */
 
 declare(strict_types=1);
@@ -50,7 +52,12 @@ class Config extends PhpCsFixerConfig
         'function_declaration'                        => true,
         'function_typehint_space'                     => true,
         'hash_to_slash_comment'                       => true,
-        'header_comment'                              => false,
+        'header_comment'                              => [
+            'commentType' => 'PHPDoc',
+            'header'      => 'PLHW was here at `%package%` in `%year%`! Please create a .docheader in the project root and run `composer cs-fix`',
+            'location'    => 'after_open',
+            'separate'    => 'both',
+        ],
         'include'                                     => true,
         'indentation_type'                            => true,
         'line_ending'                                 => true,
@@ -115,45 +122,43 @@ class Config extends PhpCsFixerConfig
         'whitespace_after_comma_in_array'             => true,
     ];
 
-//    /**
-//     * @var array
-//     */
-//    private $config;
-
     public function __construct(array $overrides = [])
     {
         parent::__construct('plhw-hf');
 
-        $this->setRules(array_merge($this->defaults, $overrides));
+        $this->setRules(\array_merge($this->defaults, $overrides));
         $this->setRiskyAllowed(true);
-        $this->applyHeader();
     }
 
-    private function applyHeader(): void
+    public function getRules(): array
     {
-        if (file_exists('.docheader')) {
-            $header = file_get_contents('.docheader');
+        $rules = parent::getRules();
 
-            $header = str_replace(['%year%'], [(new \DateTime('now'))->format('Y')], $header);
+        $rules['header_comment'] = $this->headerComment($rules['header_comment']);
 
-            $rules = $this->getRules();
+        return $rules;
+    }
 
-            $headerCommentRule = $rules['header_comment'] ?? [];
-
-            if ($headerCommentRule) {
-                $headerCommentRule['header'] = $header;
-            } else {
-                $headerCommentRule = [
-                    'commentType' => 'PHPDoc',
-                    'header'      => $header,
-                    'location'    => 'after_open',
-                    'separate'    => 'both',
-                ];
-            }
-
-            $rules['header_comment'] = $headerCommentRule;
-
-            $this->setRules($rules);
+    private function headerComment(array $rules): array
+    {
+        if (\file_exists('.docheader')) {
+            $header = \file_get_contents('.docheader');
+        } else {
+            $header = $rules['header'];
         }
+
+        // remove comments from existing .docheader or crash
+        $header  = \str_replace(['/**', ' */', ' * ', ' *'], '', $header);
+        $package = 'unknown';
+
+        if (\file_exists('composer.json')) {
+            $package = \json_decode(\file_get_contents('composer.json'))->name;
+        }
+
+        $header = \str_replace(['%package%', '%year%'], [$package, (new \DateTime('now'))->format('Y')], $header);
+
+        $rules['header'] = \trim($header);
+
+        return $rules;
     }
 }
