@@ -138,3 +138,7 @@ echo "pre commit hook finish"
 ## License
 
 This package is licensed using the MIT License.
+
+## Greetz
+
+Bas
