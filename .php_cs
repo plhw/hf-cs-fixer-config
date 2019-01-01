@@ -8,9 +8,9 @@
  *
  * @see       https://plhw.nl/
  *
- * @copyright Copyright (c) 2016-2018 prooph software GmbH <contact@prooph.de>
- * @copyright Copyright (c) 2016-2018 Sascha-Oliver Prolic <saschaprolic@googlemail.com>.
- * @copyright Copyright (c) 2010-2018 bushbaby multimedia. (https://bushbaby.nl)
+ * @copyright Copyright (c) 2016-2019 prooph software GmbH <contact@prooph.de>
+ * @copyright Copyright (c) 2016-2019 Sascha-Oliver Prolic <saschaprolic@googlemail.com>.
+ * @copyright Copyright (c) 2010-2019 bushbaby multimedia. (https://bushbaby.nl)
  * @author    Bas Kamer <bas@bushbaby.nl>
  * @license   MIT
  *
