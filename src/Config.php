@@ -47,7 +47,12 @@ class Config extends PhpCsFixerConfig
         'full_opening_tag' => true,
         'function_declaration' => true,
         'function_typehint_space' => true,
-        'single_line_comment_style' => true,
+        'native_function_invocation' => [
+            'include' => ['@all'],
+            'scope' => 'all',
+            'strict' => true, // or remove this line, as false is default value
+            'exclude' => ['time'],
+        ],
         'header_comment' => [
             'comment_type' => 'PHPDoc',
             'header' => 'PLHW was here at `%package%` in `%year%`! Please create a .docheader in the project root and run `composer cs-fix`',
@@ -122,7 +127,7 @@ class Config extends PhpCsFixerConfig
 
     public function __construct(array $overrides = [])
     {
-        parent::__construct('bushbaby php-cs-fixer-config');
+        parent::__construct('plhw php-cs-fixer-config');
 
         $this->setRules(array_merge($this->defaults, $overrides));
         $this->setRiskyAllowed(true);
