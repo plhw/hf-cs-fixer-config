@@ -47,12 +47,6 @@ class Config extends PhpCsFixerConfig
         'full_opening_tag' => true,
         'function_declaration' => true,
         'function_typehint_space' => true,
-        'native_function_invocation' => [
-            'include' => ['@all'],
-            'scope' => 'all',
-            'strict' => true, // or remove this line, as false is default value
-            'exclude' => ['time'],
-        ],
         'header_comment' => [
             'comment_type' => 'PHPDoc',
             'header' => 'PLHW was here at `%package%` in `%year%`! Please create a .docheader in the project root and run `composer cs-fix`',
@@ -69,7 +63,11 @@ class Config extends PhpCsFixerConfig
         'class_attributes_separation' => true,
         'modernize_types_casting' => true,
         'native_function_casing' => true,
-        'native_function_invocation' => true,
+        'native_function_invocation' => [
+            'include' => ['@all'],
+            'scope' => 'all',
+            'strict' => true, // or remove this line, as false is default value
+        ],
         'new_with_braces' => true,
         'no_alias_functions' => true,
         'no_blank_lines_after_class_opening' => true,
@@ -129,7 +127,7 @@ class Config extends PhpCsFixerConfig
     {
         parent::__construct('plhw php-cs-fixer-config');
 
-        $this->setRules(array_merge($this->defaults, $overrides));
+        $this->setRules(\array_merge($this->defaults, $overrides));
         $this->setRiskyAllowed(true);
     }
 
@@ -144,23 +142,23 @@ class Config extends PhpCsFixerConfig
 
     private function headerComment(array $rules): array
     {
-        if (file_exists('.docheader')) {
-            $header = file_get_contents('.docheader');
+        if (\file_exists('.docheader')) {
+            $header = \file_get_contents('.docheader');
         } else {
             $header = $rules['header'];
         }
 
         // remove comments from existing .docheader or crash
-        $header = str_replace(['/**', ' */', ' * ', ' *'], '', $header);
+        $header = \str_replace(['/**', ' */', ' * ', ' *'], '', $header);
         $package = 'unknown';
 
-        if (file_exists('composer.json')) {
-            $package = json_decode(file_get_contents('composer.json'))->name ?? 'unknown/unknown';
+        if (\file_exists('composer.json')) {
+            $package = \json_decode(\file_get_contents('composer.json'))->name ?? 'unknown/unknown';
         }
 
-        $header = str_replace(['%package%', '%year%'], [$package, (new \DateTime('now'))->format('Y')], $header);
+        $header = \str_replace(['%package%', '%year%'], [$package, (new \DateTime('now'))->format('Y')], $header);
 
-        $rules['header'] = trim($header);
+        $rules['header'] = \trim($header);
 
         return $rules;
     }
