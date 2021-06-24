@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace HF\CS;
 
+use Laminas\Stdlib\ArrayUtils;
 use PhpCsFixer\Config as PhpCsFixerConfig;
 
 class Config extends PhpCsFixerConfig
@@ -127,7 +128,7 @@ class Config extends PhpCsFixerConfig
     {
         parent::__construct('plhw php-cs-fixer-config');
 
-        $this->setRules(\array_merge($this->defaults, $overrides));
+        $this->setRules(ArrayUtils::merge($this->defaults, $overrides));
         $this->setRiskyAllowed(true);
     }
 
