@@ -69,6 +69,8 @@ class Config extends PhpCsFixerConfig
             'scope' => 'all',
             'strict' => true, // or remove this line, as false is default value
         ],
+        'global_namespace_import' => ['import_classes' => false, 'import_constants' => false, 'import_functions' => false],
+        'no_extra_blank_lines' => ['tokens' => ['use']],
         'new_with_braces' => true,
         'no_alias_functions' => true,
         'no_blank_lines_after_class_opening' => true,
